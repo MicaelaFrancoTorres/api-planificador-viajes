@@ -7,12 +7,9 @@ import { PrismaModule } from '../prisma/prisma.module';
 import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
-  imports: [
-    PrismaModule,
-    PassportModule,
-    JwtModule.register({}),
-  ],
+  imports: [PrismaModule, PassportModule, JwtModule.register({})],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
+  exports: [JwtModule, PassportModule],
 })
 export class AuthModule {}
