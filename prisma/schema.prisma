@@ -1,0 +1,70 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  viajes        Viaje[]
+  refreshTokens RefreshToken[]
+
+  @@map("users")
+}
+
+// Guardamos el refresh token hasheado en la base para poder invalidarlo en el logout
+model RefreshToken {
+  id        String   @id @default(uuid())
+  tokenHash String
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+  revoked   Boolean  @default(false)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("refresh_tokens")
+}
+
+model Viaje {
+  id            String   @id @default(uuid())
+  destino       String
+  fechaInicio   DateTime
+  fechaFin      DateTime
+  presupuesto   Float?
+  notas         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  actividades Actividad[]
+
+  @@map("viajes")
+}
+
+model Actividad {
+  id        String   @id @default(uuid())
+  nombre    String
+  fecha     DateTime
+  costo     Float    @default(0)
+  notas     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  viajeId String
+  viaje   Viaje  @relation(fields: [viajeId], references: [id], onDelete: Cascade)
+
+  @@map("actividades")
+}
