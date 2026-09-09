@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  UnauthorizedException,
+  ConflictException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { PrismaService } from '../prisma/prisma.service';
@@ -53,6 +57,46 @@ export class AuthService {
     return this.generateTokens(user.id, user.email);
   }
 
+  async refresh(refreshToken: string) {
+    let payload: { sub: string; email: string };
+
+    try {
+      payload = await this.jwtService.verifyAsync(refreshToken, {
+        secret: process.env.JWT_REFRESH_SECRET,
+      });
+    } catch {
+      throw new UnauthorizedException('Refresh token inválido o expirado');
+    }
+
+    const storedTokens = await this.prisma.refreshToken.findMany({
+      where: { userId: payload.sub, revoked: false },
+    });
+
+    let matchFound = false;
+    for (const stored of storedTokens) {
+      const matches = await bcrypt.compare(refreshToken, stored.tokenHash);
+      if (matches) {
+        matchFound = true;
+        break;
+      }
+    }
+
+    if (!matchFound) {
+      throw new UnauthorizedException('Refresh token inválido o expirado');
+    }
+
+    return this.generateTokens(payload.sub, payload.email);
+  }
+
+  async logout(userId: string) {
+    await this.prisma.refreshToken.updateMany({
+      where: { userId, revoked: false },
+      data: { revoked: true },
+    });
+
+    return { message: 'Sesión cerrada correctamente' };
+  }
+
   private async generateTokens(userId: string, email: string) {
     const payload = { sub: userId, email };
 
@@ -64,6 +108,18 @@ export class AuthService {
     const refreshToken = await this.jwtService.signAsync(payload, {
       secret: process.env.JWT_REFRESH_SECRET,
       expiresIn: '7d',
+    });
+
+    const refreshTokenHash = await bcrypt.hash(refreshToken, 10);
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + 7);
+
+    await this.prisma.refreshToken.create({
+      data: {
+        tokenHash: refreshTokenHash,
+        userId,
+        expiresAt,
+      },
     });
 
     return { accessToken, refreshToken };
