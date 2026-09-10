@@ -1,10 +1,12 @@
 import { Body, Controller, Post, UseGuards, Req } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { RefreshDto } from './dto/refresh.dto';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
@@ -25,6 +27,7 @@ export class AuthController {
   }
 
   @Post('logout')
+  @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   logout(@Req() req: any) {
     return this.authService.logout(req.user.userId);
