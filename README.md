@@ -1,114 +1,122 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# API Planificador de Viajes
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+API backend desarrollada con NestJS, TypeScript, Prisma y PostgreSQL. Permite a los usuarios registrarse, autenticarse, y gestionar sus viajes junto con las actividades planificadas dentro de cada uno.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+**Autora:** Micaela Franco Torres
 
-## Description
+**Idea heredada del Segundo Proyecto Integrador:** planificador de viajes, donde cada usuario organiza sus viajes y las actividades asociadas a cada uno (destino, fechas, presupuesto, actividades con costo).
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Tecnologías utilizadas
 
-## Project setup
+- NestJS 12 + TypeScript
+- Prisma ORM + PostgreSQL (base de datos alojada en Neon)
+- Autenticación JWT (access + refresh tokens) con `@nestjs/jwt` y `passport-jwt`
+- Hasheo de contraseñas con `bcryptjs`
+- Validación de datos con `class-validator` y `class-transformer`
+- Seguridad HTTP con `helmet`, `cors` y `@nestjs/throttler` (rate limiting)
+- Documentación interactiva con `@nestjs/swagger`
+- Gestor de paquetes: `pnpm`
 
+## Instalación
+
+1. Clonar el repositorio:
 ```bash
-$ pnpm install
+git clone https://github.com/MicaelaFrancoTorres/api-planificador-viajes.git
+cd api-planificador-viajes
 ```
 
-## Compile and run the project
-
+2. Instalar dependencias:
 ```bash
-# development
-$ pnpm run start
-
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
+pnpm install
 ```
 
-## Run tests
+3. Crear un archivo `.env` en la raíz del proyecto, basándote en `.env.example`, con tus propias credenciales:
+DATABASE_URL="postgresql://usuario:contraseña@host:puerto/nombre_basededatos?sslmode=require"
+JWT_SECRET="tu-clave-secreta-para-access-tokens"
+JWT_REFRESH_SECRET="tu-clave-secreta-para-refresh-tokens"
 
+
+4. Ejecutar las migraciones de Prisma:
 ```bash
-# unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
+pnpm prisma migrate dev
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
+5. Levantar el servidor en modo desarrollo:
 ```bash
-$ pnpm install -g @nestjs/mau
-$ mau deploy
+pnpm run start:dev
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+La API queda disponible en `http://localhost:3000`.
 
-## Observability
+## Variables de entorno necesarias
 
-In production applications, observability is essential for understanding how your system behaves, detecting issues early, and maintaining reliable performance.
+| Variable | Descripción |
+|---|---|
+| `DATABASE_URL` | Cadena de conexión a la base de datos PostgreSQL |
+| `JWT_SECRET` | Clave secreta para firmar los access tokens |
+| `JWT_REFRESH_SECRET` | Clave secreta para firmar los refresh tokens |
 
-[NestJS Observe](https://observe.nestjs.com) automatically instruments your NestJS application, giving you deep visibility into your system with minimal setup:
+## Links
 
-- **Distributed tracing:** Follow requests across services and understand how they flow through your system.
-- **Waterfall analysis:** Visualize request execution and identify slow operations, bottlenecks, and unexpected delays.
-- **Performance analysis:** Analyze application performance in real time and quickly pinpoint areas that need optimization.
-- **Metrics:** Track key application and infrastructure metrics to understand system health and performance trends.
-- **Logging:** Centralize and correlate logs with traces and other telemetry to make debugging easier.
-- **Error tracking:** Detect errors quickly and investigate their root causes with the surrounding context.
-- **SLA monitoring:** Track service-level objectives and identify when your application is approaching or exceeding defined thresholds.
-- **Alarms and alerts:** Set up alerts for critical errors, performance degradation, SLA violations, and other anomalies so your team can react quickly.
+- **Repositorio:** https://github.com/MicaelaFrancoTorres/api-planificador-viajes
+- **Deploy:** *(pendiente de completar)*
 
-## Resources
+## Documentación interactiva (Swagger)
 
-Check out a few resources that may come in handy when working with NestJS:
+Además de la tabla de endpoints más abajo, la API cuenta con documentación interactiva generada con Swagger. Una vez que el servidor esté corriendo, se puede acceder desde:
+http://localhost:3000/api
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Auto-instrument your application with [NestJS Observer](https://observer.nestjs.com). Distributed tracing, metrics, and logging made easy. Error tracking and performance monitoring for your NestJS applications.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
 
-## Support
+Desde ahí se puede probar cada endpoint directamente, incluyendo los protegidos con JWT (usando el botón "Authorize" para pegar el access token obtenido en `/auth/login`).
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## Endpoints disponibles
 
-## Stay in touch
+### Autenticación
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+| Método | Ruta | Descripción | Protegido |
+|---|---|---|---|
+| POST | `/auth/register` | Crea un usuario nuevo (contraseña hasheada) | No |
+| POST | `/auth/login` | Valida credenciales, devuelve access y refresh token | No |
+| POST | `/auth/refresh` | Renueva el access token a partir de un refresh token válido | No |
+| POST | `/auth/logout` | Invalida los refresh tokens del usuario | Sí (JWT) |
 
-## License
+### Viajes
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+| Método | Ruta | Descripción | Protegido |
+|---|---|---|---|
+| POST | `/viajes` | Crea un viaje asociado al usuario logueado | Sí (JWT) |
+| GET | `/viajes` | Lista los viajes del usuario, con sus actividades | Sí (JWT) |
+| GET | `/viajes/:id` | Obtiene un viaje, incluyendo gasto total y días restantes calculados | Sí (JWT) |
+| PATCH | `/viajes/:id` | Edita un viaje (solo si pertenece al usuario) | Sí (JWT) |
+| DELETE | `/viajes/:id` | Elimina un viaje (solo si pertenece al usuario) | Sí (JWT) |
+
+### Actividades (anidadas dentro de un viaje)
+
+| Método | Ruta | Descripción | Protegido |
+|---|---|---|---|
+| POST | `/viajes/:viajeId/actividades` | Crea una actividad dentro de un viaje propio | Sí (JWT) |
+| GET | `/viajes/:viajeId/actividades` | Lista las actividades de un viaje propio | Sí (JWT) |
+| GET | `/viajes/:viajeId/actividades/:id` | Obtiene una actividad puntual | Sí (JWT) |
+| PATCH | `/viajes/:viajeId/actividades/:id` | Edita una actividad | Sí (JWT) |
+| DELETE | `/viajes/:viajeId/actividades/:id` | Elimina una actividad | Sí (JWT) |
+
+## Seguridad implementada
+
+- Contraseñas hasheadas con `bcryptjs` (costo 10), nunca devueltas en las respuestas.
+- Autenticación JWT con access token de corta duración (15 min) y refresh token de larga duración (7 días).
+- Los refresh tokens se guardan hasheados en la base de datos y pueden ser revocados (logout).
+- Todas las rutas que exponen o modifican datos del usuario están protegidas con `JwtAuthGuard`.
+- Verificación de "ownership": cada usuario solo puede ver, editar o borrar sus propios viajes y actividades.
+- `ValidationPipe` global con `whitelist` y `forbidNonWhitelisted`, que rechaza cualquier propiedad no declarada en los DTOs.
+- `helmet` para headers de seguridad HTTP.
+- `cors` configurado.
+- Rate limiting global con `@nestjs/throttler` (20 requests por minuto por IP).
+
+## Modelo de datos
+
+El modelo completo está definido en `prisma/schema.prisma`, con los siguientes modelos:
+
+- **User**: usuarios de la aplicación (email, contraseña hasheada).
+- **RefreshToken**: refresh tokens hasheados, asociados a un usuario, con posibilidad de revocación.
+- **Viaje**: viajes creados por un usuario (destino, fechas, presupuesto, notas).
+- **Actividad**: actividades dentro de un viaje (nombre, fecha, costo, notas).

@@ -9,11 +9,14 @@ import {
   UseGuards,
   Req,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ActividadesService } from './actividades.service';
 import { CreateActividadDto } from './dto/create-actividad.dto';
 import { UpdateActividadDto } from './dto/update-actividad.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
+@ApiTags('Actividades')
+@ApiBearerAuth()
 @Controller('viajes/:viajeId/actividades')
 @UseGuards(JwtAuthGuard)
 export class ActividadesController {
