@@ -59,7 +59,7 @@ La API queda disponible en `http://localhost:3000`.
 ## Links
 
 - **Repositorio:** https://github.com/MicaelaFrancoTorres/api-planificador-viajes
-- **Deploy:** *(pendiente de completar)*
+- **Deploy:** https://api-planificador-viajes.onrender.com
 
 ## Documentación interactiva (Swagger)
 
